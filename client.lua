@@ -17,8 +17,13 @@ RegisterCommand("car", function (source, args, rawCommand)
     local heading = GetEntityHeading(playerped)
     local vehiclename = args[1]
 
-    RemoveVehicle()
+    if vehiclename == nil then
+        vehiclename = Config.StandardVehicle
+    end
 
+    if Config.DeleteOldVehicle then
+        RemoveVehicle()
+    end
     RequestModel(vehiclename)
 
     while not HasModelLoaded(vehiclename) do
@@ -27,6 +32,7 @@ RegisterCommand("car", function (source, args, rawCommand)
         
         Wait(100)
         if waiting > 2000 then
+            Notification("~r~ Couldn't load Vehicle")          
             break
         end
 
@@ -35,7 +41,7 @@ RegisterCommand("car", function (source, args, rawCommand)
     local vehicle = CreateVehicle(vehiclename, coords.x, coords.y, coords.z, heading, Config.network, false)
     TaskWarpPedIntoVehicle(playerped, vehicle, -1)
 
-    Notification("~r~Could not load the vehicle model in time, a crash was prevented.")
-    
 end, Config.UseAce)
+
+
 
